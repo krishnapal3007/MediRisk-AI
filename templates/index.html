@@ -1091,6 +1091,10 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;bac
             </a>
         </div>
 
+        <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open navigation" aria-expanded="false">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
         <div class="nav-actions">
             <div class="nav-status premium-status">
                 <span class="status-dot"></span>
@@ -1102,6 +1106,13 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;bac
         </div>
     </div>
 </nav>
+
+<div class="mobile-nav-menu" id="mobileNavMenu" aria-hidden="true">
+    <a href="/" class="mobile-nav-link"><i class="fa-solid fa-house"></i><span>Home</span></a>
+    <a href="/assessment" class="mobile-nav-link active"><i class="fa-solid fa-clipboard-check"></i><span>Assessment</span></a>
+    <a href="#ai-assistant" class="mobile-nav-link"><i class="fa-solid fa-robot"></i><span>AI Assistant</span></a>
+    <div class="mobile-nav-status"><span class="status-dot"></span> AI System Online</div>
+</div>
 
 
 <!-- =========================================================
@@ -3237,6 +3248,37 @@ document.addEventListener("DOMContentLoaded", function () {
         initBMICalculator();
     }
 
+})();
+</script>
+
+
+<script id="medirisk-mobile-nav-fix">
+(function(){
+    const btn = document.getElementById("mobileMenuBtn");
+    const menu = document.getElementById("mobileNavMenu");
+    if(!btn || !menu) return;
+
+    function closeMenu(){
+        menu.classList.remove("open");
+        btn.setAttribute("aria-expanded","false");
+        btn.setAttribute("aria-label","Open navigation");
+        const icon=btn.querySelector("i");
+        if(icon){ icon.className="fa-solid fa-bars"; }
+        menu.setAttribute("aria-hidden","true");
+    }
+
+    btn.addEventListener("click", function(){
+        const open = menu.classList.toggle("open");
+        btn.setAttribute("aria-expanded", String(open));
+        btn.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
+        const icon=btn.querySelector("i");
+        if(icon){ icon.className=open ? "fa-solid fa-xmark" : "fa-solid fa-bars"; }
+        menu.setAttribute("aria-hidden", String(!open));
+    });
+
+    menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
+    document.addEventListener("keydown", e => { if(e.key === "Escape") closeMenu(); });
+    window.addEventListener("resize", () => { if(window.innerWidth > 900) closeMenu(); });
 })();
 </script>
 
